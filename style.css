@@ -17,17 +17,62 @@ body {
   background-color: #d4d4d4;
 }
 
-.game-board {
-  width: 400px;
-  height: 400px;
-  background-color: #000;
-  margin-bottom: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.3rem;
+main {
+  display: none;
 }
 
-.game-board div {
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.intro h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.intro h3 {
+  font-size: 1.5rem;
+  color: rgb(72, 73, 143);
+}
+
+.intro div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.intro .btn {
+  background-color: unset;
+  width: 10rem;
+  font-size: 1.3rem;
+  padding: 1rem 0;
+  border: 2px solid rgb(72, 73, 143);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s linear;
+}
+
+.intro .btn:hover {
+  background-color: rgb(72, 73, 143);
+  color: #fff;
+}
+
+.game-board {
+  width: 24rem;
+  height: 24rem;
+  background-color: #000;
+  margin-bottom: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.3rem;
+  user-select: none;
+}
+
+.game-board .cell {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,6 +80,7 @@ body {
   color: #000;
   cursor: pointer;
   font-size: 3rem;
+  transition: 0.3s linear;
 }
 
 .players {
@@ -56,4 +102,22 @@ body {
 
 .players p {
   font-size: 2.3rem;
+  color: brown;
+}
+
+.cell.winner {
+  color: rgb(198, 3, 3);
+  font-size: 4.3rem;
+}
+
+@media screen and (max-width: 410px) {
+  :root {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  :root {
+    font-size: 10px;
+  }
 }

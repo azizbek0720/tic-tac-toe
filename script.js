@@ -1,12 +1,16 @@
 "use strict";
 
-const board = document.querySelector(".game-board");
+const main = document.querySelector("main");
+const intro = document.querySelector(".intro");
+const cells = document.querySelectorAll(".cell");
 const player1 = document.querySelector(".player-1 p");
 const player2 = document.querySelector(".player-2 p");
 const draw = document.querySelector(".draw p");
+const choiceBtns = document.querySelectorAll(".btn");
 
-let isActive = true;
-const winnerPosition = [
+console.log(choiceBtns);
+
+const positions = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -17,53 +21,85 @@ const winnerPosition = [
   [2, 4, 6],
 ];
 
-let a = 0;
+let board = new Array(9).fill(NaN);
+let isWinner = false;
+let isDraw = false;
+let currentPlayer = "X";
 
-function changePlayer() {
-  player1.classList.toggle("active");
-  player2.classList.toggle("active");
+function handleChoiceBtnClick() {
+  choiceBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      let isX = btn.classList.contains("choice-x");
+      currentPlayer = isX ? "X" : "O";
+
+      setTimeout(() => {
+        main.style.display = "block";
+        intro.style.display = "none";
+      }, 1500);
+    });
+  });
 }
 
-function createCell() {
-  for (let i = 0; i < 9; i++) {
-    const cell = document.createElement("div");
+function clearGame() {
+  setTimeout(() => {
+    isWinner = false;
+    board = new Array(9).fill(NaN);
 
-    board.appendChild(cell);
-  }
+    cells.forEach((cell) => {
+      cell.classList.remove("winner");
+      cell.textContent = "";
+    });
+  }, 1000);
 }
 
-const items = [];
-
-function handleCell() {
-  [...board.children].forEach((cell, idx) => {
+function handleCellClick() {
+  cells.forEach((cell, idx) => {
     cell.addEventListener("click", () => {
-      if (isActive && !cell.textContent) {
-        cell.textContent = "X";
-        changePlayer();
-        isActive = false;
-        items.push(idx);
+      if (!cell.textContent && !isWinner) {
+        board[idx] = currentPlayer;
+        cell.textContent = currentPlayer;
 
-        checkWinner(items);
-      } else if (!isActive && !cell.textContent) {
-        cell.textContent = "O";
-        changePlayer();
-        isActive = true;
+        checkWinner();
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+      }
+      if (isWinner || checkDraw()) {
+        clearGame();
       }
     });
   });
 }
 
-function checkWinner(items) {
-  for (const pos of winnerPosition) {
-    for (const num of pos) {
-      if (items.includes(num)) a++;
+function checkWinner() {
+  for (let [x, y, z] of positions) {
+    if (board[x] === board[y] && board[y] === board[z]) {
+      isWinner = true;
+      [x, y, z].forEach((i) => cells[i].classList.add("winner"));
+
+      if (currentPlayer === "X") {
+        setTimeout(() => {
+          player1.textContent = +player1.textContent + 1;
+        }, 300);
+      } else if (currentPlayer === "O") {
+        setTimeout(() => {
+          player2.textContent = +player2.textContent + 1;
+        }, 300);
+      }
     }
   }
 }
 
+function checkDraw() {
+  if (board.every((elm) => elm)) {
+    setTimeout(() => {
+      draw.textContent = +draw.textContent + 1;
+    }, 300);
+    return true;
+  }
+}
+
 function init() {
-  createCell();
-  handleCell();
+  handleChoiceBtnClick();
+  handleCellClick();
 }
 
 init();
